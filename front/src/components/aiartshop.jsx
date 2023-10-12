@@ -30,10 +30,11 @@ function Shop () {
                     <Link id="carticon" to="/cart"><img src="../cart.svg" alt="Aller au panier" /></Link>
                 </div>
                 <section className="products">
-                {productsData.map((product) => (
-                    <Product key={product._id} productData={product} />
-                    // <Link key={productsData._id} to="/productDescription">Buy</Link>
-                ))}
+                    {productsData.map((product) => (
+                        <article className="ficheProduct" key={product._id}>
+                                <Product key={product._id} productData={product} />
+                        </article>
+                    ))}
                 </section>
             </section>
         </>

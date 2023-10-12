@@ -67,7 +67,7 @@ const ProductDescription = () => {
                 </select>
                 </div>
                 <Link className="button-buy" to="#" onClick={handleAddToCart}>
-                Acheter
+                Buy {productData.shorttitle}
                 </Link>
             </div>
             </article>

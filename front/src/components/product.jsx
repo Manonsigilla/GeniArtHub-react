@@ -3,17 +3,16 @@ import { Link } from 'react-router-dom';
 
 const Product = ({ productData }) => {
     return (
-        <div className="product">
-            <Link to={`/product/${productData._id}`}>
-                <img src={productData.image} alt={productData.titre} />
-            </Link>
-        </div>
+        <>
+        <img src={productData.image} alt={productData.titre} />
+        <Link to={`/product/${productData._id}`} >Buy {productData.shorttitle}</Link>
+        </>
     );
 };
 
 Product.propTypes = {
     productData: PropTypes.shape({
-        _id: PropTypes.string.isRequired,
+        shorttitle: PropTypes.string.isRequired,
         image: PropTypes.string.isRequired,
         titre: PropTypes.string.isRequired,
     }).isRequired
