@@ -12,6 +12,7 @@ const Product = ({ productData }) => {
 
 Product.propTypes = {
     productData: PropTypes.shape({
+        _id: PropTypes.string.isRequired,
         shorttitle: PropTypes.string.isRequired,
         image: PropTypes.string.isRequired,
         titre: PropTypes.string.isRequired,

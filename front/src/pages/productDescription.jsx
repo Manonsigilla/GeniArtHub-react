@@ -9,28 +9,56 @@ import { useCart } from "../components/cartContext";
 const ProductDescription = () => {
     const [productData, setProductData] = useState(null);
     const [quantity, setQuantity] = useState(1)
+    const [selectedSize, setSelectedSize] = useState(null);
     const { id } = useParams();
     const { addToCart } = useCart();
 
     document.body.classList.add("page")
 
+    
     useEffect(() => {
-
-    // Effectuez un appel réseau pour récupérer les données du produit en utilisant l'ID
-    fetch(`http://localhost:3000/api/products/${id}`)
+        
+        // Effectuez un appel réseau pour récupérer les données du produit en utilisant l'ID
+        fetch(`http://localhost:3000/api/products/${id}`)
         .then((response) => response.json())
         .then((data) => {
-        setProductData(data);
-    })
+            setProductData(data);
+        })
         .catch((error) => {
-        console.error("Erreur lors de la récupération des données : " + error);
+            console.error("Erreur lors de la récupération des données : " + error);
         });
     }, [id]);
+    
+    const handleSizeChange = (e) => {
+        setSelectedSize(e.target.value);
+    };
+
+    const getPriceForSelectedSize = () => {
+        if (selectedSize) {
+            const selectedDeclinaison = productData.declinaisons.find(
+                (declinaison) => declinaison.taille === selectedSize
+            );
+            if (selectedDeclinaison) {
+                return selectedDeclinaison.prix;
+            }
+        }
+        return null;
+    };
+
+    const priceForSelectedSize = getPriceForSelectedSize();
+
 
     const handleAddToCart = () => {
-        const selectedProduct = productData.declinaisons[0];
-        addToCart(productData, selectedProduct.quantity)
+        if (selectedSize) {
+            const selectedProduct = productData.declinaisons.find(
+                (declinaison) => declinaison.taille === selectedSize
+            );
+            if (selectedProduct) {
+                addToCart(productData, selectedProduct.quantity);
+            }
+        }
     }
+
 
     return !productData ? <div>Loading...</div> : (
         <>
@@ -46,7 +74,7 @@ const ProductDescription = () => {
                 <p>{productData?.description?.substring(0, 200) + "..."}</p>
                 <div className="price">
                 <p>Acheter pour</p>
-                <span className="showprice">{productData.declinaisons[0].prix} €</span>
+                <span className="showprice">{priceForSelectedSize !== null ? `${priceForSelectedSize} €` : "Sélectionnez une taille"}</span>
                 </div>
                 <div className="declinaison">
                 <input 
@@ -58,7 +86,7 @@ const ProductDescription = () => {
                     min="1"
                     max="100"
                     onChange={(e) => setQuantity(parseInt(e.target.value, 10))} />
-                <select name="format" id="format">
+                <select name="format" id="format" onChange={handleSizeChange}>
                     {productData.declinaisons.map((declinaison, index) => (
                     <option key={index} value={declinaison.taille}>
                         {declinaison.taille} - {declinaison.prix} €

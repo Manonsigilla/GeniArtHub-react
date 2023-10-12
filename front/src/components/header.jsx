@@ -7,7 +7,7 @@ function Header () {
                 <Link to="/">
                 <img src="../logo-black.png" alt="Logo du site GeniArtHub" />
                 </Link>
-                <Link id="carticon" href="/cart">
+                <Link id="carticon" to="/cart">
                     <img src="../cart.svg" alt="panier" />
                 </Link>
             </div>

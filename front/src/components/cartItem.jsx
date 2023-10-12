@@ -4,7 +4,7 @@ const CartItem = ({ item, onRemove }) => {
     return (
         <tr>
             <td>
-            <img src={item.image} alt={item.titre} />
+            <img className='image' src={item.image} alt={item.titre} />
             </td>
             <td>{item.titre}</td>
             <td>{item.quantity}</td>

@@ -39,7 +39,7 @@ export function useCart () {
         throw new Error('useCart must be used within a CartProvider');
     }
     return context;
-};
+}
 
 export const CartProvider = ({ children }) => {
     const [state, dispatch] = useReducer(cartReducer, initialState);
