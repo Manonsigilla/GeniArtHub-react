@@ -41,7 +41,7 @@ const Cart = () => {
                     </thead>
                     <tbody>
                     {state.cart.map((item) => (
-                        <CartItem key={item._id} item={item} onRemove={handleRemove} />
+                        <CartItem key={item._id} item={item} onRemove={handleRemove} dispatch={dispatch} />
                     ))}
                     </tbody>
                 </table>
