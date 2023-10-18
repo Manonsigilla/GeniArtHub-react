@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 const CartItem = ({ item, onRemove }) => {
 
     const quantity = typeof item.quantity === 'number' ? item.quantity : 0;
-    console.log(item.quantity)
 
     return (
         <tr>
@@ -15,7 +14,7 @@ const CartItem = ({ item, onRemove }) => {
             <td>{item.titre}</td>
             <td>{quantity}</td>
             <td>{item.prix} €</td>
-            <td>{item.prix * item.quantity} €</td>
+            <td>{(item.prix * item.quantity).toFixed(2)} €</td>
             <td>
             <button onClick={() => onRemove(item)}>Supprimer</button>
             </td>

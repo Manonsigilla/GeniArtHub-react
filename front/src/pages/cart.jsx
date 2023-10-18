@@ -8,7 +8,7 @@ const Cart = () => {
     const {state, dispatch} = useCart();
     
     useEffect(() => {
-        const total = state.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+        const total = state.cart.reduce((acc, item) => acc + item.prix * item.quantity, 0);
         
         // dispatch pour mettre à jour le total du panier
         dispatch({ type: "UPDATE_TOTAL", payload: total });
@@ -17,6 +17,8 @@ const Cart = () => {
     const handleRemove = (item) => {
         dispatch({ type: "REMOVE_FROM_CART", payload: item });
     }
+
+    const total = state.total || 0;
 
     return (
         <>
@@ -27,6 +29,16 @@ const Cart = () => {
                 <hr />
                 <div className="contenuPanier">
                 <table>
+                    <thead>
+                        <tr>
+                            <th className="titre">Image</th>
+                            <th className="titre">Titre</th>
+                            <th className="titre">Quantité</th>
+                            <th className="titre">Prix du produit</th>
+                            <th className="titre">Prix total du produit commandé</th>
+                            <th className="titre">Options</th>
+                        </tr>
+                    </thead>
                     <tbody>
                     {state.cart.map((item) => (
                         <CartItem key={item._id} item={item} onRemove={handleRemove} />
@@ -35,8 +47,8 @@ const Cart = () => {
                 </table>
                 </div>
                 <div className="total">
-                    <h2>Total de la commande</h2>
-                    <p>{state.total} €</p>
+                    <h2 className="titre">Total de la commande</h2>
+                    <p>{total.toFixed(2)} €</p>
                 </div>
                 <hr />
             </section>

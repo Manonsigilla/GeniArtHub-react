@@ -23,7 +23,7 @@ const cartReducer = (state, action) => {
                 cart: newCart,
                 total: newTotal,
             };
-            case 'UPDATE_QUANTITY':
+        case 'UPDATE_QUANTITY':
             updatedCart = state.cart.map((item) => {
                 if (item._id === action.payload._id) {
                 return { ...item, quantity: action.payload.quantity };
