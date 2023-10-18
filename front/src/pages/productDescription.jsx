@@ -8,8 +8,8 @@ import { useCart } from "../components/cartContext";
 
 const ProductDescription = () => {
     const [productData, setProductData] = useState(null);
-    const [quantity, setQuantity] = useState(1)
     const [selectedSize, setSelectedSize] = useState(null);
+    const [selectedQuantity, setSelectedQuantity] = useState(1);
     const { id } = useParams();
     const { addToCart } = useCart();
 
@@ -30,7 +30,19 @@ const ProductDescription = () => {
     }, [id]);
     
     const handleSizeChange = (e) => {
-        setSelectedSize(e.target.value);
+        const newSize = e.target.value;
+        setSelectedSize(newSize);
+
+        if (newSize && productData) {
+            const selectedDeclinaison = productData.declinaisons.find(
+                (declinaison) => declinaison.taille === newSize
+            );
+            if (selectedDeclinaison) {
+                setSelectedQuantity(selectedDeclinaison.quantity || selectedQuantity);
+            }
+        } else {
+            setSelectedQuantity(1); // Remettez la quantité à 1 si aucune taille n'est sélectionnée
+        }
     };
 
     const getPriceForSelectedSize = () => {
@@ -54,7 +66,7 @@ const ProductDescription = () => {
                 (declinaison) => declinaison.taille === selectedSize
             );
             if (selectedProduct) {
-                addToCart(productData, selectedProduct.quantity);
+                addToCart({ ...productData, prix: selectedProduct.prix }, selectedQuantity);
             }
         }
     }
@@ -74,7 +86,7 @@ const ProductDescription = () => {
                 <p>{productData?.description?.substring(0, 200) + "..."}</p>
                 <div className="price">
                 <p>Acheter pour</p>
-                <span className="showprice">{priceForSelectedSize !== null ? `${priceForSelectedSize} €` : "Sélectionnez une taille"}</span>
+                <span className="showprice">{priceForSelectedSize !== null ? `${priceForSelectedSize}` : productData.declinaisons[0].prix}€</span>
                 </div>
                 <div className="declinaison">
                 <input 
@@ -82,10 +94,11 @@ const ProductDescription = () => {
                     name="quantity"
                     id="quantity"
                     placeholder="1"
-                    value={quantity}
+                    value={selectedQuantity}
                     min="1"
                     max="100"
-                    onChange={(e) => setQuantity(parseInt(e.target.value, 10))} />
+                    onChange={(e) => setSelectedQuantity(parseInt(e.target.value, 10))}
+                />
                 <select name="format" id="format" onChange={handleSizeChange}>
                     {productData.declinaisons.map((declinaison, index) => (
                     <option key={index} value={declinaison.taille}>
@@ -101,8 +114,7 @@ const ProductDescription = () => {
             </article>
             <aside>
                 <h2>Information sur l&apos;oeuvre</h2>
-                <p>Artiste : {productData.shorttitle}</p>
-                <p>Dimensions : {productData.declinaisons[0].taille}</p>
+                <p>{productData.description}</p>
             </aside>
         </section>
         </div>

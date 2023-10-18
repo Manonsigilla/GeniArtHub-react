@@ -1,13 +1,19 @@
 import PropTypes from 'prop-types';
 
+
+
 const CartItem = ({ item, onRemove }) => {
+
+    const quantity = typeof item.quantity === 'number' ? item.quantity : 0;
+    console.log(item.quantity)
+
     return (
         <tr>
             <td>
             <img className='image' src={item.image} alt={item.titre} />
             </td>
             <td>{item.titre}</td>
-            <td>{item.quantity}</td>
+            <td>{quantity}</td>
             <td>{item.prix} €</td>
             <td>{item.prix * item.quantity} €</td>
             <td>
@@ -21,7 +27,7 @@ CartItem.propTypes = {
     item: PropTypes.shape({
         image: PropTypes.string.isRequired,
         titre: PropTypes.string.isRequired,
-        quantity: PropTypes.number.isRequired,
+        quantity: PropTypes.oneOfType([PropTypes.number, PropTypes.object]).isRequired,
         prix: PropTypes.number.isRequired,
     }).isRequired,
     onRemove: PropTypes.func.isRequired,

@@ -4,32 +4,53 @@ const CartContext = createContext();
 
 const initialState = {
     cart: [],
+    total: 0,
 };
 
 const cartReducer = (state, action) => {
+    let newCart;
+    let newTotal;
+    let updatedCart;
+    let updatedTotal;
+    let filteredCart;
+    let filteredTotal;
     switch (action.type) {
         case 'ADD_TO_CART':
-        return {
-            ...state,
-            cart: [...state.cart, action.payload],
-        };
-        case 'UPDATE_QUANTITY':
-        return {
-            ...state,
-            cart: state.cart.map((item) => {
-            if (item._id === action.payload._id) {
+            newCart = [...state.cart, action.payload];
+            newTotal = state.total + action.payload.price * action.payload.quantity;
+            return {
+                ...state,
+                cart: newCart,
+                total: newTotal,
+            };
+            case 'UPDATE_QUANTITY':
+            updatedCart = state.cart.map((item) => {
+                if (item._id === action.payload._id) {
                 return { ...item, quantity: action.payload.quantity };
-            }
-            return item;
-            }),
-        };
+                }
+                return item;
+            });
+            updatedTotal = updatedCart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+            return {
+                ...state,
+                cart: updatedCart,
+                total: updatedTotal,
+            };
         case 'REMOVE_FROM_CART':
-        return {
-            ...state,
-            cart: state.cart.filter((item) => item._id !== action.payload._id),
-        };
+            filteredCart = state.cart.filter((item) => item._id !== action.payload._id);
+            filteredTotal = filteredCart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+            return {
+                ...state,
+                cart: filteredCart,
+                total: filteredTotal,
+            };
+        case 'UPDATE_TOTAL':
+            return {
+                ...state,
+                total: action.payload,
+            };
         default:
-        return state;
+            return state;
     }
 };
 

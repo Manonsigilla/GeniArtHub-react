@@ -6,9 +6,10 @@ import Footer from "../components/footer";
 
 const Cart = () => {
     const {state, dispatch} = useCart();
-
+    
     useEffect(() => {
         const total = state.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+        
         // dispatch pour mettre à jour le total du panier
         dispatch({ type: "UPDATE_TOTAL", payload: total });
     }, [state.cart, dispatch]);
@@ -34,8 +35,8 @@ const Cart = () => {
                 </table>
                 </div>
                 <div className="total">
-                <h2>Total de la commande</h2>
-                <p>{/* Affichez ici le total de la commande */}</p>
+                    <h2>Total de la commande</h2>
+                    <p>{state.total} €</p>
                 </div>
                 <hr />
             </section>
