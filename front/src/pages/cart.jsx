@@ -111,6 +111,8 @@ const Cart = () => {
         }
     }
 
+    const totalQuantity = state.cart.reduce((acc, item) => acc + item.quantity, 0);
+
     return (
         <>
             <Header />
@@ -144,7 +146,7 @@ const Cart = () => {
                 </div>
                 <div className="total">
                     <h2 className="titre">Total de la commande</h2>
-                    <p>{total.toFixed(2)} €</p>
+                    <p>{totalQuantity} articles pour un total de {total.toFixed(2)} €</p>
                 </div>
                 <hr />
             </section>
