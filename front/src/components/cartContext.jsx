@@ -73,13 +73,19 @@ export const CartProvider = ({ children }) => {
 
     const addToCart = (product, quantity) => {
     // Vérifiez si le produit est déjà dans le panier
-    const existingItem = state.cart.find((item) => item._id === product._id);
-        if (existingItem) {
-        // Si le produit existe déjà, mettez à jour la quantité
-        dispatch({
-            type: 'UPDATE_QUANTITY',
-            payload: { _id: product._id, quantity },
-        });
+    const existingItemIndex = state.cart.findIndex((item) => item._id === product._id);
+        if (existingItemIndex !== -1) {
+            const updatedCart = [...state.cart];
+            updatedCart[existingItemIndex].quantity += quantity;
+
+            // Si le produit existe déjà, mettez à jour la quantité
+            dispatch({
+                type: 'UPDATE_QUANTITY',
+                payload: { 
+                    _id: product._id,
+                    quantity: updatedCart[existingItemIndex].quantity,
+                },
+            });
         } else {
         // Sinon, ajoutez le produit au panier
         dispatch({

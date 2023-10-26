@@ -60,7 +60,8 @@ const ProductDescription = () => {
     const priceForSelectedSize = getPriceForSelectedSize();
 
 
-    const handleAddToCart = () => {
+    const handleAddToCart = (e) => {
+        e.preventDefault();
         if (selectedSize) {
             const selectedProduct = productData.declinaisons.find(
                 (declinaison) => declinaison.taille === selectedSize

@@ -6,14 +6,10 @@ import Footer from "../components/footer";
 
 const Cart = () => {
     const {state, dispatch} = useCart();
-    const [orderNumber, setOrderNumber] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [formError, setFormError] = useState({});
+    const [orderId, setOrderId] = useState(null);
 
-    const generateOrderNumber = () => {
-        // générer un nombre aléatoire entre 1 et 10000 pour simuler un numéro de commande
-        return Math.floor(Math.random() * 10000) + 1;
-    }
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -66,20 +62,50 @@ const Cart = () => {
         }
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (validateForm(e)) {
-            // Générer un numéro de commande
-            const orderNumber = generateOrderNumber();
-            // Mettre à jour le state pour afficher le numéro de commande
-            setOrderNumber(orderNumber);
-            // Vider le panier
-            dispatch({ type: "EMPTY_CART" });
-            // Vider le formulaire
-            e.target.reset();
-            // Afficher la modale
-            openModal();
+            const formData = new FormData(e.target);
+            const contact = {
+                firstName: formData.get("firstName"),
+                lastName: formData.get("lastName"),
+                address: formData.get("address"),
+                city: formData.get("city"),
+                email: formData.get("email")
+            };
+
+            const products = state.cart.map((item) => item._id);
+
+            try {
+                const response = await fetch ("http://localhost:3000/api/products/order", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ contact, products }),
+            });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    // on stocke le numéro de commande dans le state
+                    setOrderId(data.orderId);
+                    // on vide le panier
+                    dispatch({ type: "EMPTY_CART" });
+                    // on vide le formulaire
+                    e.target.reset();
+                    // on ouvre la modale
+                    openModal();
+                } else {
+                    console.error("Retour du serveur :", response.status);
+                    const errorData = await response.json();
+                    console.error("Données de l'erreur :", errorData);
+                    alert("Erreur lors de l'enregistrement de la commande");
+                }
+            } catch (error) {
+                console.error("Erreur :", error);
+                alert("Erreur lors de l'enregistrement de la commande");
+            }
         }
     }
 
@@ -122,27 +148,27 @@ const Cart = () => {
                 <div className="form-container">
                     <div>
                     <label htmlFor="prenom">Prénom :</label>
-                    <input type="text" name="prenom" id="prenom" />
+                    <input type="text" name="firstName" id="prenom" />
                     {formError.prenom && <p className="error">{formError.prenom}</p>}
                     </div>
                     <div>
                     <label htmlFor="nom">Nom :</label>
-                    <input type="text" name="nom" id="nom" />
+                    <input type="text" name="lastName" id="nom" />
                     {formError.nom && <p className="error">{formError.nom}</p>}
                     </div>
                     <div>
                     <label htmlFor="adresse">Adresse :</label>
-                    <input type="text" name="adresse" id="adresse" />
+                    <input type="text" name="address" id="adresse" />
                     {formError.adresse && <p className="error">{formError.adresse}</p>}
                     </div>
                     <div>
                     <label htmlFor="ville">Ville :</label>
-                    <input type="text" name="ville" id="ville" />
+                    <input type="text" name="city" id="ville" />
                     {formError.ville && <p className="error">{formError.ville}</p>}
                     </div>
                     <div>
                     <label htmlFor="email">Email :</label>
-                    <input type="email" name="mail" id="mail" />
+                    <input type="email" name="email" id="mail" />
                     {formError.mail && <p className="error">{formError.mail}</p>}
                     </div>
                     <div className="form-submit">
@@ -151,14 +177,14 @@ const Cart = () => {
                 </div>
             </form>
         </section>
-        {/* Modale de confirmation de commande */}
+
         {isModalOpen && (
             <div className="modal">
                 <div className="modal-content">
                     <span className="close" onClick={closeModal}>&times;</span>
                     <h2>Confirmation de commande</h2>
                     <p>Merci pour votre commande !</p>
-                    <p>Votre numéro de commande est le <strong>{orderNumber}</strong></p>
+                    <p>Votre numéro de commande est le <strong>{orderId}</strong></p>
                 </div>
             </div>
         )}
