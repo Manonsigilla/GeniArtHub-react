@@ -127,6 +127,7 @@ const Cart = () => {
                         <tr>
                             <th className="titre">Image</th>
                             <th className="titre">Titre</th>
+                            <th className="titre">Format</th>
                             <th className="titre">Quantité</th>
                             <th className="titre">Prix du produit</th>
                             <th className="titre">Prix total du produit commandé</th>
@@ -135,7 +136,7 @@ const Cart = () => {
                     </thead>
                     <tbody>
                     {state.cart.map((item) => (
-                        <CartItem key={item._id} item={item} onRemove={handleRemove} dispatch={dispatch} />
+                        <CartItem key={item._id} item={item} taille={item.taille} onRemove={handleRemove} dispatch={dispatch} />
                         ))}
                     </tbody>
                 </table>

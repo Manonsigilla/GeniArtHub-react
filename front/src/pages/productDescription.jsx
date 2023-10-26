@@ -72,7 +72,7 @@ const ProductDescription = () => {
             if (selectedProduct) {
                 const newTotalQuantity = totalQuantity + selectedQuantity;
                 if (newTotalQuantity <= 100) {
-                    addToCart({ ...productData, prix: selectedProduct.prix }, selectedQuantity);
+                    addToCart({ ...productData, prix: selectedProduct.prix, taille: selectedSize }, selectedQuantity);
                     setTotalQuantity(newTotalQuantity);
                     setIsModalOpen(true);
                 } else {

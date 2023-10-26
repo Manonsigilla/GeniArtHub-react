@@ -31,6 +31,8 @@ const CartItem = ({ item, onRemove, dispatch }) => {
                 <img className='image' src={item.image} alt={item.titre} />
             </td>
             <td>{item.titre}</td>
+            {/* On rajoute le format */}
+            <td>{item.taille}</td>
             <td>
                 <input type="number" name="quantity" id="quantity" value={quantity} max={maxQuantity} className='quantite' onChange={handleQuantityChange} />
             </td>
@@ -50,6 +52,7 @@ CartItem.propTypes = {
         quantity: PropTypes.oneOfType([PropTypes.number, PropTypes.object]).isRequired,
         prix: PropTypes.number.isRequired,
         _id: PropTypes.string.isRequired,
+        taille: PropTypes.string.isRequired,
     }).isRequired,
     onRemove: PropTypes.func.isRequired,
     dispatch: PropTypes.func.isRequired,
