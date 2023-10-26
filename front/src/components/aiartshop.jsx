@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import Product from "./product";
+import { useCart } from "./cartContext";
 
 function Shop () {
     const [productsData, setProductsData] = useState([]);
@@ -16,6 +17,10 @@ function Shop () {
         })
     }, [])
 
+    const { state } = useCart();
+
+    const totalQuantity = state.cart.reduce((total, item) => total + item.quantity, 0);
+
     return (
         <>
             <section className="hero">
@@ -27,7 +32,12 @@ function Shop () {
             <section id="aiartshop" className="productlist">
                 <div>
                     <img src="../logo-black.png" alt="Logo GeniArtHub version sombre" />
-                    <Link id="carticon" to="/cart"><img src="../cart.svg" alt="Aller au panier" /></Link>
+                    <Link id="carticon" to="/cart">
+                        <img src="../cart.svg" alt="panier" />
+                        {totalQuantity > 0 && (
+                            <span>{totalQuantity}</span>
+                        )}
+                    </Link>
                 </div>
                 <section className="products">
                     {productsData.map((product) => (

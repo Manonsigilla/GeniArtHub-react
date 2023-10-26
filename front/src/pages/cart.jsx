@@ -27,7 +27,9 @@ const Cart = () => {
     }, [state.cart, dispatch]);
 
     const handleRemove = (item) => {
+        // dispatch pour supprimer un produit du panier et afficher une alerte de confirmation
         dispatch({ type: "REMOVE_FROM_CART", payload: item });
+        alert("Le produit a bien été supprimé du panier");
     }
 
     const total = state.total || 0;
@@ -117,6 +119,9 @@ const Cart = () => {
                 <h1>Votre panier</h1>
                 <hr />
                 <div className="contenuPanier">
+                {state.cart.length === 0 ? (
+                    <p className="panierVide">Votre panier est vide, veuillez ajouter au moins un article.</p>
+                ) : (
                 <table>
                     <thead>
                         <tr>
@@ -131,9 +136,10 @@ const Cart = () => {
                     <tbody>
                     {state.cart.map((item) => (
                         <CartItem key={item._id} item={item} onRemove={handleRemove} dispatch={dispatch} />
-                    ))}
+                        ))}
                     </tbody>
                 </table>
+                )}
                 </div>
                 <div className="total">
                     <h2 className="titre">Total de la commande</h2>

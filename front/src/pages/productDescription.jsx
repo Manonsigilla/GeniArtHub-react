@@ -12,6 +12,9 @@ const ProductDescription = () => {
     const [selectedQuantity, setSelectedQuantity] = useState(1);
     const { id } = useParams();
     const { addToCart } = useCart();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [totalQuantity, setTotalQuantity] = useState(0);
+    const [isLimitExceeded, setIsLimitExceeded] = useState(false);
 
     document.body.classList.add("page")
 
@@ -67,15 +70,46 @@ const ProductDescription = () => {
                 (declinaison) => declinaison.taille === selectedSize
             );
             if (selectedProduct) {
-                addToCart({ ...productData, prix: selectedProduct.prix }, selectedQuantity);
+                const newTotalQuantity = totalQuantity + selectedQuantity;
+                if (newTotalQuantity <= 100) {
+                    addToCart({ ...productData, prix: selectedProduct.prix }, selectedQuantity);
+                    setTotalQuantity(newTotalQuantity);
+                    setIsModalOpen(true);
+                } else {
+                    setIsLimitExceeded(true);
+                }
             }
         }
+    }
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    }
+
+    const closeLimitExceededModal = () => {
+        setIsLimitExceeded(false);
     }
 
 
     return !productData ? <div>Loading...</div> : (
         <>
         <Header />
+        {isModalOpen && (
+            <div className="modal">
+                <div className="modal-content">
+                    <span className="close" onClick={closeModal}>&times;</span>
+                    <p>Le produit a bien été ajouté au panier</p>
+                </div>
+            </div>
+        )}
+        {isLimitExceeded && (
+            <div className="modal">
+                <div className="modal-content">
+                    <span className="close" onClick={closeLimitExceededModal}>&times;</span>
+                    <p>Vous ne pouvez pas ajouter plus de 100 produits au panier</p>
+                </div>
+            </div>
+        )}
         <div className="product-description">
         <section className="detailoeuvre">
             <article>

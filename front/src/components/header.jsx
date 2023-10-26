@@ -1,6 +1,12 @@
 import { Link } from "react-router-dom";
+import { useCart } from "./cartContext";
 
 function Header () {
+
+    const { state } = useCart();
+
+    const totalQuantity = state.cart.reduce((total, item) => total + item.quantity, 0);
+
     return (
         <header>
             <div className="row">
@@ -9,6 +15,9 @@ function Header () {
                 </Link>
                 <Link id="carticon" to="/cart">
                     <img src="../cart.svg" alt="panier" />
+                    {totalQuantity > 0 && (
+                        <span>{totalQuantity}</span>
+                    )}
                 </Link>
             </div>
         </header>
